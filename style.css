@@ -8,6 +8,11 @@ body.dark-mode .country-card {
     border-color: #6c757d;     /* Grey border */
 }
 
+body.dark-mode .country-card h2,
+body.dark-mode .country-card h5 {
+    color: #f8f9fa; /* Explicitly set text color to white for h2 and h5 in dark mode */
+}
+
 body.dark-mode .text-muted {
     color: #adb5bd !important; /* Lighter muted text */
 }
