@@ -25,13 +25,15 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.15);
         }
     </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <!-- Header -->
 <div class="container text-center mt-5">
-    <h1 class="fw-bold">🌍 SLANG MAP</h1>
+    <h1 class="fw-bold d-inline-block">🌍 SLANG MAP</h1>
+    <button id="theme-toggle" class="btn btn-outline-secondary ms-3">Toggle Theme</button>
     <p class="text-muted">
         Real slang. Real usage. By country & generation.
     </p>
@@ -110,6 +112,6 @@
         window.location.href = country + ".html";
     }
 </script>
-
+<script src="main.js"></script>
 </body>
 </html>
