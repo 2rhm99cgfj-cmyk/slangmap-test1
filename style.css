@@ -1,21 +1,21 @@
 body.dark-mode {
-    background-color: #f8f9fa; /* Light background */
-    color: #212529;            /* Dark text */
+    background-color: #212529; /* Dark background */
+    color: #f8f9fa;            /* Light text */
 }
 
 body.dark-mode .country-card {
-    background-color: #e9ecef; /* Lighter card background */
-    border-color: #ced4da;     /* Lighter border */
+    background-color: #343a40; /* Darker card background */
+    border-color: #6c757d;     /* Grey border */
 }
 
 body.dark-mode .text-muted {
-    color: #495057 !important; /* Darker muted text */
+    color: #adb5bd !important; /* Lighter muted text */
 }
 
 body.dark-mode .form-select {
-    background-color: #e9ecef; /* Lighter form select background */
-    color: #212529;            /* Darker form select text */
-    border-color: #ced4da;     /* Lighter form select border */
+    background-color: #343a40; /* Darker form select background */
+    color: #f8f9fa;            /* Light form select text */
+    border-color: #6c757d;     /* Grey form select border */
 }
 
 #theme-toggle {
