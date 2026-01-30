@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SLANG MAP - Korea</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    >
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+    <h2>🇰🇷 Korea</h2>
+
+    <p id="userInfo" class="text-muted mt-2"></p>
+
+    <hr>
+
+    <p>
+        This page will contain Korean slang, abbreviations, and usage by generation.
+    </p>
+
+    <button class="btn btn-secondary mt-3" onclick="goBack()">
+        Back to Home
+    </button>
+</div>
+
+<script>
+    const userType = localStorage.getItem("userType");
+    const country = localStorage.getItem("country");
+
+    let message = "";
+
+    if (userType === "local") {
+        message = "You are viewing this as a local speaker.";
+    } else if (userType === "visitor") {
+        message = "You are viewing this as a visitor.";
+    } else {
+        message = "User type not specified.";
+    }
+
+    document.getElementById("userInfo").innerText =
+        `${message} (Country: ${country})`;
+
+    function goBack() {
+        window.location.href = "index.html";
+    }
+</script>
+
+</body>
+</html>
