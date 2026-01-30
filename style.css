@@ -1,16 +1,19 @@
+/* Default body styles for light mode */
+body {
+    background-color: #f8f9fa; /* Light background */
+    color: #212529;            /* Dark text */
+}
+
+/* Dark mode styles */
 body.dark-mode {
     background-color: #212529; /* Dark background */
     color: #f8f9fa;            /* Light text */
 }
 
-body.dark-mode .country-card {
+body.dark-mode .card { /* Apply to all cards including country-card and slang list cards */
     background-color: #343a40; /* Darker card background */
     border-color: #6c757d;     /* Grey border */
-}
-
-body.dark-mode .country-card h2,
-body.dark-mode .country-card h5 {
-    color: #f8f9fa; /* Explicitly set text color to white for h2 and h5 in country cards */
+    color: #f8f9fa;            /* Light text for cards */
 }
 
 body.dark-mode h2,
@@ -22,16 +25,15 @@ body.dark-mode .text-muted {
     color: #f8f9fa !important; /* Pure white muted text */
 }
 
-body.dark-mode .form-select {
-    background-color: #343a40; /* Darker form select background */
-    color: #f8f9fa;            /* Light form select text */
-    border-color: #6c757d;     /* Grey form select border */
+/* Specific styles for country cards, not related to dark mode colors */
+.country-card {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-body.dark-mode .card {
-    background-color: #343a40; /* Darker card background for all cards (e.g., slang list items) */
-    border-color: #6c757d;     /* Grey border for all cards */
-    color: #f8f9fa;            /* Light text for all cards */
+.country-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
 }
 
 #theme-toggle {
