@@ -1,58 +1,73 @@
 // slang.js
-// js/slang.js
 
 const country = localStorage.getItem("country");
+const selectedGen = localStorage.getItem("generation");
 const storageKey = `slangs_${country}`;
 
 let slangData = JSON.parse(localStorage.getItem(storageKey)) || [];
 
+/* ---------- Add Slang ---------- */
 function addSlang() {
     const word = document.getElementById("slangWord").value.trim();
     const meaning = document.getElementById("slangMeaning").value.trim();
     const gen = document.getElementById("slangGen").value;
 
     if (!word || !meaning || !gen) {
-        alert("Please fill all fields");
+        alert("모든 항목을 입력해주세요.");
         return;
     }
 
-    slangData.push({
+    const slang = {
+        id: crypto.randomUUID(),
         word,
         meaning,
-        gen,
+        generation: gen,
         likes: 0,
-        dislikes: 0
-    });
+        dislikes: 0,
+        createdAt: Date.now()
+    };
 
-    localStorage.setItem(storageKey, JSON.stringify(slangData));
-    renderSlangs();
+    slangData.unshift(slang); // 최신이 위로
+    saveData();
+    renderSlangList();
     clearForm();
 }
 
-function renderSlangs() {
+/* ---------- Save ---------- */
+function saveData() {
+    localStorage.setItem(storageKey, JSON.stringify(slangData));
+}
+
+/* ---------- Render ---------- */
+function renderSlangList() {
     const list = document.getElementById("slangList");
     if (!list) return;
 
     list.innerHTML = "";
 
-    slangData.forEach((s, index) => {
+    const filtered = selectedGen
+        ? slangData.filter(s => s.generation === selectedGen)
+        : slangData;
+
+    filtered.forEach(s => {
         list.innerHTML += `
             <div class="col-md-4">
                 <div class="card p-3 mb-3">
                     <h5>${s.word}</h5>
                     <p>${s.meaning}</p>
-                    <small>${s.gen}</small>
+                    <small class="text-muted">${s.generation}</small>
                 </div>
             </div>
         `;
     });
 }
 
+/* ---------- Utils ---------- */
 function clearForm() {
     document.getElementById("slangWord").value = "";
     document.getElementById("slangMeaning").value = "";
     document.getElementById("slangGen").value = "";
 }
 
-// 페이지 로드 시 실행
-document.addEventListener("DOMContentLoaded", renderSlangs);
+/* ---------- Init ---------- */
+document.addEventListener("DOMContentLoaded", renderSlangList);
