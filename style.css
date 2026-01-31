@@ -1,43 +1,133 @@
-/* Default body styles for light mode */
+/* =========================
+   Global
+========================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  --bg-main: #f8f9fa;
+  --bg-gradient: linear-gradient(180deg, #f8f9fa 0%, #eef1f4 100%);
+  --text-main: #212529;
+  --text-muted: #6c757d;
+  --primary: #0d6efd;
+  --card-bg: #ffffff;
+  --ranking-bg: linear-gradient(135deg, #fff8e1, #ffffff);
+}
+
 body {
-    background-color: #f8f9fa; /* Light background */
-    color: #212529;            /* Dark text */
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg-gradient);
+  color: var(--text-main);
+  min-height: 100vh;
 }
 
-/* Dark mode styles */
-body.dark-mode {
-    background-color: #212529; /* Dark background */
-    color: #f8f9fa;            /* Light text */
+/* =========================
+   Typography
+========================= */
+
+h1, h2, h3, h4, h5 {
+  font-weight: 700;
 }
 
-body.dark-mode .card { /* Apply to all cards including country-card and slang list cards */
-    background-color: #343a40; /* Darker card background */
-    border-color: #6c757d;     /* Grey border */
-    color: #f8f9fa;            /* Light text for cards */
+p {
+  line-height: 1.6;
 }
 
-body.dark-mode h2,
-body.dark-mode h5 {
-    color: #f8f9fa; /* Explicitly set text color to white for all h2 and h5 in dark mode */
+.text-muted {
+  color: var(--text-muted) !important;
 }
 
-body.dark-mode .text-muted {
-    color: #f8f9fa !important; /* Pure white muted text */
+/* =========================
+   Buttons
+========================= */
+
+.btn {
+  border-radius: 999px;
+  font-weight: 600;
 }
 
-/* Specific styles for country cards, not related to dark mode colors */
-.country-card {
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+.btn-primary {
+  padding: 8px 18px;
 }
 
-.country-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+.btn-outline-primary.active,
+.btn-outline-primary:hover {
+  background-color: var(--primary);
+  color: #fff;
 }
 
-#theme-toggle {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
+/* =========================
+   Cards
+========================= */
+
+.card {
+  background-color: var(--card-bg);
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+}
+
+/* =========================
+   Slang Card
+========================= */
+
+.slang-card h5 {
+  margin-bottom: 6px;
+}
+
+.slang-card small {
+  font-size: 0.8rem;
+}
+
+/* =========================
+   Like Button
+========================= */
+
+.like-btn {
+  margin-top: 8px;
+  font-size: 0.85rem;
+}
+
+/* =========================
+   Ranking
+========================= */
+
+.ranking-card {
+  background: var(--ranking-bg);
+  border-left: 6px solid #ffc107;
+}
+
+/* =========================
+   Generation Selector
+========================= */
+
+.generation-btn.active {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* =========================
+   DEV Button
+========================= */
+
+#resetBtn {
+  opacity: 0.6;
+}
+
+#resetBtn:hover {
+  opacity: 1;
+}
+
+/* =========================
+   Footer spacing
+========================= */
+
+hr {
+  margin: 2rem 0;
 }

@@ -1,61 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>SLANG MAP</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>SLANG MAP - Korea</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
+<div class="container mt-5">
 
-<div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center">
-    <h2 id="countryTitle"></h2>
-    <button id="theme-toggle" class="btn btn-outline-secondary">Dark</button>
-  </div>
+    <h2>Korea</h2>
 
-  <p class="text-muted">
-    Open community slang map. Anyone can contribute.
-  </p>
+    <hr>
 
-  <hr>
+    <!-- Generation Selection -->
+    <h5>Select your generation</h5>
+    <div class="d-flex gap-2 flex-wrap mt-2">
+        <button class="btn btn-outline-primary" onclick="selectGeneration('10s')">10s</button>
+        <button class="btn btn-outline-primary" onclick="selectGeneration('20s')">20s</button>
+        <button class="btn btn-outline-primary" onclick="selectGeneration('30s')">30s</button>
+        <button class="btn btn-outline-primary" onclick="selectGeneration('40s')">40s</button>
+        <button class="btn btn-outline-primary" onclick="selectGeneration('50s')">50s</button>
+        <button class="btn btn-outline-primary" onclick="selectGeneration('60s')">60s</button>
+    </div>
 
-  <!-- Generation -->
-  <h5>Select your generation</h5>
-  <div id="generationButtons" class="d-flex gap-2 flex-wrap"></div>
-  <p id="generationInfo" class="text-muted mt-2"></p>
+    <p id="generationInfo" class="text-muted mt-2"></p>
 
-  <hr>
+    <hr>
 
-  <!-- Add Slang -->
-  <h5>Add Slang</h5>
-  <input id="slangWord" class="form-control mb-2" placeholder="Slang">
-  <input id="slangMeaning" class="form-control mb-2" placeholder="Meaning">
-  <button id="addSlangBtn" class="btn btn-primary">Add</button>
+    <!-- Add Slang -->
+    <h5>Add New Slang</h5>
+    <div class="row g-3">
+        <div class="col-md-4">
+            <input id="slangWord" class="form-control" placeholder="Slang word">
+        </div>
+        <div class="col-md-6">
+            <input id="slangMeaning" class="form-control" placeholder="Meaning">
+        </div>
+        <div class="col-12">
+            <button class="btn btn-primary" onclick="addSlang()">Add Slang</button>
+        </div>
+    </div>
 
-  <hr>
+    <hr>
 
-  <!-- Ranking -->
-  <h5>🔥 Popular Slang</h5>
-  <div id="rankingList" class="mb-3"></div>
+    <!-- Popular Ranking -->
+    <h5>🔥 Popular Slang</h5>
+    <div id="rankingList" class="row mt-3"></div>
 
-  <hr>
+    <hr>
 
-  <!-- List -->
-  <h5>Slang List</h5>
-  <div id="slangList" class="row"></div>
+    <!-- Slang List -->
+    <h5>Slang List</h5>
+    <div id="slangList" class="row mt-3"></div>
 
-  <hr>
+    <!-- DEV RESET -->
+    <button
+      id="resetBtn"
+      class="btn btn-danger mt-4 d-none"
+      onclick="resetSlangData()"
+    >
+      Reset Slang Data (DEV)
+    </button>
 
-  <!-- Dev Reset -->
-  <button id="resetDataBtn" class="btn btn-danger btn-sm">
-    Reset Slang Data (DEV)
-  </button>
+    <hr>
 
-  <hr>
+    <button class="btn btn-secondary mt-3" onclick="goBack()">
+        Back to Home
+    </button>
 
-  <button id="backBtn" class="btn btn-secondary">
-    Back to Home
-  </button>
 </div>
 
 <script src="main.js"></script>

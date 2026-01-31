@@ -1,142 +1,144 @@
 const country = localStorage.getItem("country");
-const storageKey = `slang_${country}`;
-const voteKey = `voted_${country}`;
+const storageKey = `slangs_${country}`;
 
 let slangData = JSON.parse(localStorage.getItem(storageKey)) || [];
-let voted = JSON.parse(localStorage.getItem(voteKey)) || [];
+let selectedGeneration = localStorage.getItem("generation");
 
-const gens = ["10s","20s","30s","40s","50s","60s"];
+/* ---------- Generation ---------- */
+function selectGeneration(gen) {
+    selectedGeneration = gen;
+    localStorage.setItem("generation", gen);
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("countryTitle").innerText =
-    country === "korea" ? "🇰🇷 Korea" : "🇺🇸 USA";
+    document.getElementById("generationInfo").innerText =
+        `Selected generation: ${gen}`;
 
-  renderGenerationButtons();
-  renderSlangs();
-  renderRanking();
+    document
+      .querySelectorAll(".btn-outline-primary")
+      .forEach(btn => btn.classList.remove("active"));
 
-  document.getElementById("addSlangBtn").addEventListener("click", addSlang);
-  document.getElementById("resetDataBtn").addEventListener("click", resetData);
-});
+    event.target.classList.add("active");
 
-/* Generation */
-function renderGenerationButtons() {
-  const box = document.getElementById("generationButtons");
-  gens.forEach(g => {
-    const btn = document.createElement("button");
-    btn.className = "btn btn-outline-primary";
-    btn.innerText = g;
-    btn.onclick = () => {
-      localStorage.setItem("generation", g);
-      document.getElementById("generationInfo").innerText = `Selected: ${g}`;
-      renderSlangs();
-    };
-    box.appendChild(btn);
-  });
+    renderSlangList();
 }
 
-/* Add Slang */
+/* ---------- Add Slang ---------- */
 function addSlang() {
-  const word = slangWord.value.trim();
-  const meaning = slangMeaning.value.trim();
-  const gen = localStorage.getItem("generation");
+    const word = document.getElementById("slangWord").value.trim();
+    const meaning = document.getElementById("slangMeaning").value.trim();
 
-  if (!word || !meaning || !gen) {
-    alert("Fill all fields & select generation");
-    return;
-  }
+    if (!word || !meaning || !selectedGeneration) {
+        alert("Please fill all fields and select generation.");
+        return;
+    }
 
-  if (slangData.some(s => s.word === word)) {
-    alert("Duplicate slang");
-    return;
-  }
+    // duplicate word check
+    const exists = slangData.some(
+        s => s.word.toLowerCase() === word.toLowerCase()
+    );
+    if (exists) {
+        alert("This slang already exists.");
+        return;
+    }
 
-  slangData.unshift({
-    id: crypto.randomUUID(),
-    word,
-    meaning,
-    generation: gen,
-    likes: 0
-  });
-
-  save();
-  renderSlangs();
-  renderRanking();
-
-  slangWord.value = "";
-  slangMeaning.value = "";
-}
-
-/* Render Slang List */
-function renderSlangs() {
-  const list = document.getElementById("slangList");
-  list.innerHTML = "";
-
-  const gen = localStorage.getItem("generation");
-
-  slangData
-    .filter(s => !gen || s.generation === gen)
-    .forEach(s => {
-      const col = document.createElement("div");
-      col.className = "col-md-4";
-      col.innerHTML = `
-        <div class="card p-3 mb-3">
-          <h5>${s.word}</h5>
-          <p>${s.meaning}</p>
-          <button class="btn btn-sm btn-outline-success">
-            👍 ${s.likes}
-          </button>
-        </div>
-      `;
-      col.querySelector("button").onclick = () => vote(s.id);
-      list.appendChild(col);
+    slangData.unshift({
+        id: crypto.randomUUID(),
+        word,
+        meaning,
+        generation: selectedGeneration,
+        likes: 0,
+        voters: []
     });
+
+    save();
+    renderSlangList();
+    renderRanking();
+
+    document.getElementById("slangWord").value = "";
+    document.getElementById("slangMeaning").value = "";
 }
 
-/* Vote */
-function vote(id) {
-  if (voted.includes(id)) {
-    alert("Already voted");
-    return;
-  }
+/* ---------- Vote ---------- */
+function likeSlang(id) {
+    const userKey = "voted_" + id;
+    if (localStorage.getItem(userKey)) return;
 
-  const s = slangData.find(x => x.id === id);
-  s.likes++;
-  voted.push(id);
+    const slang = slangData.find(s => s.id === id);
+    slang.likes++;
 
-  localStorage.setItem(voteKey, JSON.stringify(voted));
-  save();
-  renderSlangs();
-  renderRanking();
+    localStorage.setItem(userKey, true);
+    save();
+    renderSlangList();
+    renderRanking();
 }
 
-/* Ranking */
+/* ---------- Render ---------- */
+function renderSlangList() {
+    const list = document.getElementById("slangList");
+    if (!list) return;
+
+    list.innerHTML = "";
+
+    slangData
+        .filter(s => !selectedGeneration || s.generation === selectedGeneration)
+        .forEach(s => {
+            list.innerHTML += `
+                <div class="col-md-4">
+                    <div class="card p-3 mb-3 slang-card">
+                        <h5>${s.word}</h5>
+                        <p>${s.meaning}</p>
+                        <small>${s.generation}</small><br>
+                        <button class="btn btn-sm btn-outline-success mt-2"
+                            onclick="likeSlang('${s.id}')">
+                            👍 ${s.likes}
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+}
+
+/* ---------- Ranking ---------- */
 function renderRanking() {
-  const box = document.getElementById("rankingList");
-  box.innerHTML = "";
+    const ranking = document.getElementById("rankingList");
+    if (!ranking) return;
 
-  [...slangData]
-    .sort((a, b) => b.likes - a.likes)
-    .slice(0, 5)
-    .forEach(s => {
-      box.innerHTML += `<div>${s.word} 👍 ${s.likes}</div>`;
-    });
+    ranking.innerHTML = "";
+
+    [...slangData]
+        .sort((a, b) => b.likes - a.likes)
+        .slice(0, 5)
+        .forEach((s, i) => {
+            ranking.innerHTML += `
+                <div class="col-md-4">
+                    <div class="card p-3 mb-3 ranking-card">
+                        <h5>#${i + 1} ${s.word}</h5>
+                        <p>${s.meaning}</p>
+                        <small>${s.generation} · 👍 ${s.likes}</small>
+                    </div>
+                </div>
+            `;
+        });
 }
 
-/* Reset */
-function resetData() {
-  if (!confirm("Delete all slang data?")) return;
-
-  localStorage.removeItem(storageKey);
-  localStorage.removeItem(voteKey);
-  slangData = [];
-  voted = [];
-
-  renderSlangs();
-  renderRanking();
+/* ---------- DEV ---------- */
+function resetSlangData() {
+    localStorage.removeItem(storageKey);
+    location.reload();
 }
 
-/* Save */
+/* ---------- Save ---------- */
 function save() {
-  localStorage.setItem(storageKey, JSON.stringify(slangData));
+    localStorage.setItem(storageKey, JSON.stringify(slangData));
 }
+
+/* ---------- Init ---------- */
+document.addEventListener("DOMContentLoaded", () => {
+    const DEV_MODE = true;
+
+    if (DEV_MODE) {
+        document.getElementById("resetBtn")?.classList.remove("d-none");
+    }
+
+    renderSlangList();
+    renderRanking();
+});
