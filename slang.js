@@ -29,11 +29,14 @@ function addSlang() {
         return;
     }
 
+    if (!selectedGen) {
+        alert("먼저 세대를 선택해주세요.");
+        return;
+    }
     const word = document.getElementById("slangWord").value.trim();
     const meaning = document.getElementById("slangMeaning").value.trim();
-    const gen = document.getElementById("slangGen").value;
 
-    if (!word || !meaning || !gen) {
+    if (!word || !meaning) {
         alert("모든 항목을 입력해주세요.");
         return;
     }
@@ -53,7 +56,7 @@ function addSlang() {
         id: crypto.randomUUID(),
         word,
         meaning,
-        generation: gen,
+        generation: selectedGen,
         likes: 0,
         ratingSum: 0,
         ratingCount: 0,
@@ -228,13 +231,26 @@ function selectGeneration(gen) {
 function clearForm() {
     document.getElementById("slangWord").value = "";
     document.getElementById("slangMeaning").value = "";
-    document.getElementById("slangGen").value = "";
 }
 
 /* =========================
-   Init
+   Page Context Init
 ========================= */
 document.addEventListener("DOMContentLoaded", () => {
+    const userInfo = document.getElementById("userInfo");
+    const genInfo = document.getElementById("generationInfo");
+
+    if (userInfo) {
+        let msg = "User type not specified.";
+        if (userType === "local") msg = "You are viewing this as a local speaker.";
+        if (userType === "visitor") msg = "You are viewing this as a visitor.";
+        userInfo.innerText = `${msg} (Country: ${country})`;
+    }
+
+    if (genInfo && selectedGen) {
+        genInfo.innerText = `Selected generation: ${selectedGen}`;
+    }
+
     renderSlangList();
     renderRanking();
 });

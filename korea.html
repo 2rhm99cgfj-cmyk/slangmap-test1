@@ -47,17 +47,6 @@
         <div class="col-md-4">
             <input type="text" id="slangMeaning" class="form-control" placeholder="Meaning">
         </div>
-        <div class="col-md-4">
-            <select id="slangGen" class="form-select">
-                <option value="">Select Generation</option>
-                <option value="10s">10대</option>
-                <option value="20s">20대</option>
-                <option value="30s">30대</option>
-                <option value="40s">40대</option>
-                <option value="50s">50대</option>
-                <option value="60s">60대</option>
-            </select>
-        </div>
         <div class="col-12">
             <button class="btn btn-primary" onclick="addSlang()">Add Slang</button>
         </div>
@@ -84,43 +73,6 @@
 
 </div>
 
-<script>
-    // Read context
-    const userType = localStorage.getItem("userType");
-    const country = localStorage.getItem("country");
-    const generation = localStorage.getItem("generation");
-
-    // User info text
-    let userMessage = "";
-
-    if (userType === "local") {
-        userMessage = "You are viewing this as a local speaker.";
-    } else if (userType === "visitor") {
-        userMessage = "You are viewing this as a visitor.";
-    } else {
-        userMessage = "User type not specified.";
-    }
-
-    document.getElementById("userInfo").innerText =
-        `${userMessage} (Country: ${country})`;
-
-    // Generation info
-    if (generation) {
-        document.getElementById("generationInfo").innerText =
-            `Selected generation: ${generation}`;
-    }
-
-    // Generation selection handler
-    function selectGeneration(gen) {
-        localStorage.setItem("generation", gen);
-        document.getElementById("generationInfo").innerText =
-            `Selected generation: ${gen}`;
-    }
-
-    function goBack() {
-        window.location.href = "index.html";
-    }
-</script>
 <script src="main.js"></script>
 <script src="slang.js"></script>
 </body>
