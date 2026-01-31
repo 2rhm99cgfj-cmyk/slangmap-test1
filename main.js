@@ -1,18 +1,23 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Country selection
-    document.querySelectorAll(".country-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const userType = document.getElementById("userType").value;
-        if (!userType) return alert("Select user type");
+    const btnKorea = document.getElementById("btnKorea");
+    const btnUSA = document.getElementById("btnUSA");
   
-        localStorage.setItem("userType", userType);
-        localStorage.setItem("country", btn.dataset.country);
-        window.location.href = `${btn.dataset.country}.html`;
-      });
-    });
+    if (btnKorea) {
+      btnKorea.addEventListener("click", () => goCountry("korea"));
+    }
   
-    // Theme
+    if (btnUSA) {
+      btnUSA.addEventListener("click", () => goCountry("usa"));
+    }
+  
+    function goCountry(country) {
+      localStorage.setItem("country", country);
+      localStorage.removeItem("generation");
+      window.location.href = `${country}.html`;
+    }
+  
+    // Theme toggle
     const themeBtn = document.getElementById("theme-toggle");
     if (themeBtn) {
       themeBtn.addEventListener("click", () => {

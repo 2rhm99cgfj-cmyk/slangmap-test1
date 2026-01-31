@@ -1,14 +1,12 @@
 const country = localStorage.getItem("country");
-const userType = localStorage.getItem("userType");
-const genKey = "generation";
 const storageKey = `slang_${country}`;
+const voteKey = `voted_${country}`;
 
 let slangData = JSON.parse(localStorage.getItem(storageKey)) || [];
-let voted = JSON.parse(localStorage.getItem("voted")) || [];
+let voted = JSON.parse(localStorage.getItem(voteKey)) || [];
 
 const gens = ["10s","20s","30s","40s","50s","60s"];
 
-/* Init */
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("countryTitle").innerText =
     country === "korea" ? "🇰🇷 Korea" : "🇺🇸 USA";
@@ -17,11 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
   renderSlangs();
   renderRanking();
 
-  if (userType === "visitor") {
-    document.getElementById("addSlangSection").style.display = "none";
-  }
-
-  document.getElementById("addSlangBtn")?.addEventListener("click", addSlang);
+  document.getElementById("addSlangBtn").addEventListener("click", addSlang);
+  document.getElementById("resetDataBtn").addEventListener("click", resetData);
 });
 
 /* Generation */
@@ -32,7 +27,7 @@ function renderGenerationButtons() {
     btn.className = "btn btn-outline-primary";
     btn.innerText = g;
     btn.onclick = () => {
-      localStorage.setItem(genKey, g);
+      localStorage.setItem("generation", g);
       document.getElementById("generationInfo").innerText = `Selected: ${g}`;
       renderSlangs();
     };
@@ -40,16 +35,20 @@ function renderGenerationButtons() {
   });
 }
 
-/* Add */
+/* Add Slang */
 function addSlang() {
   const word = slangWord.value.trim();
   const meaning = slangMeaning.value.trim();
-  const gen = localStorage.getItem(genKey);
+  const gen = localStorage.getItem("generation");
 
-  if (!word || !meaning || !gen) return alert("Fill all");
+  if (!word || !meaning || !gen) {
+    alert("Fill all fields & select generation");
+    return;
+  }
 
   if (slangData.some(s => s.word === word)) {
-    return alert("Duplicate slang");
+    alert("Duplicate slang");
+    return;
   }
 
   slangData.unshift({
@@ -63,48 +62,49 @@ function addSlang() {
   save();
   renderSlangs();
   renderRanking();
-  slangWord.value = slangMeaning.value = "";
+
+  slangWord.value = "";
+  slangMeaning.value = "";
 }
 
-/* Render */
+/* Render Slang List */
 function renderSlangs() {
   const list = document.getElementById("slangList");
   list.innerHTML = "";
 
-  const gen = localStorage.getItem(genKey);
-  slangData.filter(s => !gen || s.generation === gen)
-    .forEach(s => list.appendChild(createCard(s)));
-}
+  const gen = localStorage.getItem("generation");
 
-/* Card */
-function createCard(s) {
-  const col = document.createElement("div");
-  col.className = "col-md-4";
-  col.innerHTML = `
-    <div class="card p-3 mb-3">
-      <h5>${s.word}</h5>
-      <p>${s.meaning}</p>
-      <button class="btn btn-sm btn-outline-success">
-        👍 ${s.likes}
-      </button>
-    </div>
-  `;
-
-  const btn = col.querySelector("button");
-  btn.onclick = () => vote(s.id);
-
-  return col;
+  slangData
+    .filter(s => !gen || s.generation === gen)
+    .forEach(s => {
+      const col = document.createElement("div");
+      col.className = "col-md-4";
+      col.innerHTML = `
+        <div class="card p-3 mb-3">
+          <h5>${s.word}</h5>
+          <p>${s.meaning}</p>
+          <button class="btn btn-sm btn-outline-success">
+            👍 ${s.likes}
+          </button>
+        </div>
+      `;
+      col.querySelector("button").onclick = () => vote(s.id);
+      list.appendChild(col);
+    });
 }
 
 /* Vote */
 function vote(id) {
-  if (voted.includes(id)) return alert("Already voted");
+  if (voted.includes(id)) {
+    alert("Already voted");
+    return;
+  }
 
   const s = slangData.find(x => x.id === id);
   s.likes++;
   voted.push(id);
 
-  localStorage.setItem("voted", JSON.stringify(voted));
+  localStorage.setItem(voteKey, JSON.stringify(voted));
   save();
   renderSlangs();
   renderRanking();
@@ -116,13 +116,27 @@ function renderRanking() {
   box.innerHTML = "";
 
   [...slangData]
-    .sort((a,b)=>b.likes-a.likes)
-    .slice(0,5)
-    .forEach(s=>{
-      box.innerHTML += `<div>${s.word} 👍${s.likes}</div>`;
+    .sort((a, b) => b.likes - a.likes)
+    .slice(0, 5)
+    .forEach(s => {
+      box.innerHTML += `<div>${s.word} 👍 ${s.likes}</div>`;
     });
 }
 
+/* Reset */
+function resetData() {
+  if (!confirm("Delete all slang data?")) return;
+
+  localStorage.removeItem(storageKey);
+  localStorage.removeItem(voteKey);
+  slangData = [];
+  voted = [];
+
+  renderSlangs();
+  renderRanking();
+}
+
+/* Save */
 function save() {
   localStorage.setItem(storageKey, JSON.stringify(slangData));
 }
