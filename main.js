@@ -1,18 +1,31 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const themeToggle = document.getElementById('theme-toggle');
-    const currentTheme = localStorage.getItem('theme');
+document.addEventListener("DOMContentLoaded", () => {
 
-    if (currentTheme) {
-        document.body.classList.add(currentTheme);
-    }
-
-    themeToggle.addEventListener('click', () => {
-        if (document.body.classList.contains('dark-mode')) {
-            document.body.classList.remove('dark-mode');
-            localStorage.setItem('theme', 'light-mode');
-        } else {
-            document.body.classList.add('dark-mode');
-            localStorage.setItem('theme', 'dark-mode');
-        }
+    // Country selection
+    document.querySelectorAll(".country-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const userType = document.getElementById("userType").value;
+        if (!userType) return alert("Select user type");
+  
+        localStorage.setItem("userType", userType);
+        localStorage.setItem("country", btn.dataset.country);
+        window.location.href = `${btn.dataset.country}.html`;
+      });
     });
-});
+  
+    // Theme
+    const themeBtn = document.getElementById("theme-toggle");
+    if (themeBtn) {
+      themeBtn.addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+      });
+    }
+  
+    // Back
+    const backBtn = document.getElementById("backBtn");
+    if (backBtn) {
+      backBtn.addEventListener("click", () => {
+        window.location.href = "index.html";
+      });
+    }
+  });
+  
